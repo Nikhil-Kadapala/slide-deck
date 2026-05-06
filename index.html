@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="slides-format" content="viewport">
+    <title>ResAlign AI — Hustle Fund Pitch Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-bg: #0f0f13;
+            --color-bg-deep: #080810;
+            --color-surface: #1a1a24;
+            --color-text: #f0f0f8;
+            --color-text-secondary: #b0b0c8;
+            --color-text-muted: #6b6b88;
+            --color-accent-1: #7c6af5;
+            --color-accent-2: #e040fb;
+            --color-accent-3: #40c4ff;
+            --color-glass-bg: rgba(255,255,255,0.05);
+            --color-glass-border: rgba(255,255,255,0.08);
+            --color-vignette: rgba(0,0,0,0.5);
+            --font-display: 'Archivo Black', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+    </style>
+    <style>
+        :root { --color-bg: #0f0f13; --color-text: #f0f0f8; --glow-color-rgb: 124,106,245; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { background: var(--color-bg); margin: 0; }
+        body { font-family: 'DM Sans', sans-serif; color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
+        .deck { width: 100vw; height: 100vh; position: relative; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.95); transition: opacity 0.7s ease, transform 0.7s ease; pointer-events: none; overflow: hidden; }
+        .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
+        .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 4vw, 4rem); }
+        .nav-controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; z-index: 100; background: var(--color-glass-bg); backdrop-filter: blur(10px); padding: 10px 24px; border-radius: 40px; border: 1px solid var(--color-glass-border); }
+        .nav-btn { width: 40px; height: 40px; border: none; background: var(--color-glass-bg); color: var(--color-accent-1); border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .nav-btn:hover { background: var(--color-glass-border); }
+        .slide-dots { display: flex; gap: 8px; }
+        .slide-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-glass-border); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+        .slide-dots .dot.active { background: var(--color-accent-1); transform: scale(1.3); }
+        .slide-counter { font-size: 0.8rem; color: var(--color-text-muted); min-width: 40px; text-align: center; }
+        .reveal { opacity: 0; transform: translateY(20px); }
+        .text-glow { text-shadow: 0 0 20px rgba(124,106,245,0.5), 0 0 40px rgba(124,106,245,0.2); }
+        .stat-glow { text-shadow: 0 0 30px rgba(124,106,245,0.6), 0 0 60px rgba(124,106,245,0.25); }
+        @keyframes glow-pulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(124,106,245,0.5), 0 0 40px rgba(124,106,245,0.2); }
+            50% { text-shadow: 0 0 30px rgba(124,106,245,0.8), 0 0 60px rgba(124,106,245,0.35); }
+        }
+        .glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+        @keyframes float-slow {
+            0% { transform: translate(0,0) scale(1); }
+            25% { transform: translate(60px,-50px) scale(1.12); }
+            50% { transform: translate(-40px,40px) scale(0.9); }
+            75% { transform: translate(50px,20px) scale(1.08); }
+            100% { transform: translate(0,0) scale(1); }
+        }
+        @keyframes float-drift {
+            0% { transform: translate(0,0) scale(1) rotate(0deg); }
+            33% { transform: translate(-50px,-60px) scale(1.15) rotate(3deg); }
+            66% { transform: translate(40px,30px) scale(0.88) rotate(-2deg); }
+            100% { transform: translate(0,0) scale(1) rotate(0deg); }
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 10s ease-in-out infinite; }
+        .blob:nth-child(2) { animation: float-drift 14s ease-in-out infinite; }
+        .blob:nth-child(3) { animation: float-slow 18s ease-in-out infinite reverse; }
+        .slide::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-repeat: repeat; background-size: 256px 256px; opacity: 0.03; mix-blend-mode: overlay; }
+        .slide::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 50%, var(--color-vignette) 100%); }
+        .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2)); width: 0%; transition: width 0.6s ease; }
+        .bar-track { background: rgba(255,255,255,0.07); border-radius: 4px; height: 10px; width: 100%; overflow: hidden; }
+        .step-line { position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--color-accent-1), var(--color-accent-2)); z-index: 0; }
+        .step-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--color-accent-1); box-shadow: 0 0 12px rgba(124,106,245,0.7); flex-shrink: 0; position: relative; z-index: 1; }
+    </style>
+</head>
+<body>
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none;"></div>
+<div class="deck">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide active" data-slide="1">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:520px;height:520px;top:-120px;right:-100px;background:var(--color-accent-1);opacity:0.18;"></div>
+        <div class="blob" style="width:320px;height:320px;bottom:-80px;left:-60px;background:var(--color-accent-2);opacity:0.13;"></div>
+        <div class="blob" style="width:220px;height:220px;top:45%;left:10%;background:var(--color-accent-3);opacity:0.10;"></div>
+    </div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;"></canvas>
+    <div class="content text-center">
+        <div style="font-size:90px;margin-bottom:1.2rem;animation:float 3s ease-in-out infinite;" class="reveal">🧭</div>
+        <h1 class="font-display reveal" style="font-size:clamp(2.8rem,7vw,5.5rem);background:linear-gradient(135deg,#7c6af5,#e040fb,#40c4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;line-height:1.1;">ResAlign AI</h1>
+        <p class="reveal" style="font-size:clamp(1rem,2vw,1.4rem);letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:2rem;">Career Intelligence, Personalized by AI</p>
+        <p class="reveal" style="font-size:1rem;color:var(--color-text-muted);">Nikhil Kadapala · Founder & CEO · Hustle Fund 2025</p>
+    </div>
+</div>
+
+<!-- SLIDE 2: THE DREAM -->
+<div class="slide" data-slide="2">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:380px;height:380px;top:-80px;right:-80px;background:var(--color-accent-1);opacity:0.09;"></div>
+        <div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:var(--color-accent-3);opacity:0.07;"></div>
+    </div>
+    <div class="content text-center">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:1rem;">The Dream</p>
+        <h2 class="font-display reveal" style="font-size:clamp(2.5rem,6vw,5rem);line-height:1.15;margin-bottom:2rem;">Apply. Get hired.<br><span style="background:linear-gradient(135deg,#7c6af5,#e040fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Move fast.</span></h2>
+        <p class="reveal" style="font-size:1.2rem;color:var(--color-text-secondary);max-width:600px;margin:0 auto;">Find the right role, send a strong application, and land interviews — in days, not months.</p>
+    </div>
+</div>
+
+<!-- SLIDE 3: THE REALITY (Pain) -->
+<div class="slide" data-slide="3">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-100px;right:-100px;background:#f97316;opacity:0.10;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:var(--color-accent-2);opacity:0.08;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:#f97316;margin-bottom:1rem;">The Reality</p>
+        <h2 class="font-display reveal" style="font-size:clamp(2rem,4vw,3.2rem);margin-bottom:2rem;">Job searching is<br><span style="color:#f97316;">completely broken.</span></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid rgba(249,115,22,0.2);border-left:4px solid #f97316;border-radius:12px;padding:1.2rem 1.4rem;">
+                <div style="font-size:2rem;font-weight:900;color:#f97316;margin-bottom:0.2rem;">258</div>
+                <div style="font-size:0.9rem;color:var(--color-text-secondary);">avg. applications before an offer in 2024</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid rgba(249,115,22,0.2);border-left:4px solid #f97316;border-radius:12px;padding:1.2rem 1.4rem;">
+                <div style="font-size:2rem;font-weight:900;color:#f97316;margin-bottom:0.2rem;">6.4mo</div>
+                <div style="font-size:0.9rem;color:var(--color-text-secondary);">avg. job search duration for mid-level roles</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid rgba(249,115,22,0.2);border-left:4px solid #f97316;border-radius:12px;padding:1.2rem 1.4rem;">
+                <div style="font-size:2rem;font-weight:900;color:#f97316;margin-bottom:0.2rem;">75%</div>
+                <div style="font-size:0.9rem;color:var(--color-text-secondary);">of resumes never seen by a human — filtered by ATS</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid rgba(249,115,22,0.2);border-left:4px solid #f97316;border-radius:12px;padding:1.2rem 1.4rem;">
+                <div style="font-size:2rem;font-weight:900;color:#f97316;margin-bottom:0.2rem;">$4,200</div>
+                <div style="font-size:0.9rem;color:var(--color-text-secondary);">avg. income lost per month of extended job search</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: WHAT JOB SEEKERS ACTUALLY DO -->
+<div class="slide" data-slide="4">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:360px;height:360px;top:-80px;right:-80px;background:var(--color-accent-1);opacity:0.08;"></div>
+        <div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:var(--color-accent-2);opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:0.8rem;">What job seekers actually do</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.6rem,3.5vw,2.6rem);margin-bottom:1.8rem;">A painful, manual loop — <span style="color:var(--color-accent-2);">every single time</span></h2>
+        <div style="position:relative;padding-left:56px;display:flex;flex-direction:column;gap:1rem;">
+            <div class="step-line"></div>
+            <div class="reveal" style="display:flex;align-items:center;gap:1rem;">
+                <div class="step-dot"></div>
+                <div style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:10px;padding:0.9rem 1.2rem;flex:1;">
+                    <span style="font-weight:600;">Scroll job boards for hours</span> <span style="color:var(--color-text-muted);font-size:0.9rem;">— no signal on real fit or likelihood</span>
+                </div>
+            </div>
+            <div class="reveal" style="display:flex;align-items:center;gap:1rem;">
+                <div class="step-dot"></div>
+                <div style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:10px;padding:0.9rem 1.2rem;flex:1;">
+                    <span style="font-weight:600;">Manually tailor resume for each role</span> <span style="color:var(--color-text-muted);font-size:0.9rem;">— 45min avg. per application</span>
+                </div>
+            </div>
+            <div class="reveal" style="display:flex;align-items:center;gap:1rem;">
+                <div class="step-dot"></div>
+                <div style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:10px;padding:0.9rem 1.2rem;flex:1;">
+                    <span style="font-weight:600;">Guess what skills they're missing</span> <span style="color:var(--color-text-muted);font-size:0.9rem;">— no structured gap analysis</span>
+                </div>
+            </div>
+            <div class="reveal" style="display:flex;align-items:center;gap:1rem;">
+                <div class="step-dot"></div>
+                <div style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:10px;padding:0.9rem 1.2rem;flex:1;">
+                    <span style="font-weight:600;">Apply blindly, wait in silence</span> <span style="color:var(--color-text-muted);font-size:0.9rem;">— then repeat 258 more times</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: SOLUTION -->
+<div class="slide" data-slide="5">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:440px;height:440px;top:-100px;right:-100px;background:var(--color-accent-1);opacity:0.14;"></div>
+        <div class="blob" style="width:300px;height:300px;bottom:-70px;left:-50px;background:var(--color-accent-3);opacity:0.10;"></div>
+        <div class="blob" style="width:200px;height:200px;top:40%;left:20%;background:var(--color-accent-2);opacity:0.08;"></div>
+    </div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;"></canvas>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.8rem;">The Solution</p>
+        <h2 class="font-display reveal" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:0.5rem;">ResAlign: Your AI career copilot.</h2>
+        <p class="reveal" style="font-size:1.1rem;color:var(--color-text-secondary);margin-bottom:1.8rem;">Upload your resume → get a calibrated readiness score for any role → receive a personalized skill roadmap → apply with confidence.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;text-align:center;transition:transform 0.2s;cursor:default;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:2rem;margin-bottom:0.6rem;">📄</div>
+                <div style="font-weight:700;margin-bottom:0.3rem;">Resume Parser</div>
+                <div style="font-size:0.85rem;color:var(--color-text-muted);">Deep structured extraction of skills, experience & evidence</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;text-align:center;transition:transform 0.2s;cursor:default;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:2rem;margin-bottom:0.6rem;">🎯</div>
+                <div style="font-weight:700;margin-bottom:0.3rem;">Fit Scorer</div>
+                <div style="font-size:0.85rem;color:var(--color-text-muted);">0–100 readiness score across 4 skill dimensions</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;text-align:center;transition:transform 0.2s;cursor:default;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:2rem;margin-bottom:0.6rem;">🗺️</div>
+                <div style="font-weight:700;margin-bottom:0.3rem;">Career Roadmap</div>
+                <div style="font-size:0.85rem;color:var(--color-text-muted);">Personalized skill-gap plan with ranked, matched jobs</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 6: HOW IT WORKS -->
+<div class="slide" data-slide="6">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:360px;height:360px;top:-80px;right:-80px;background:var(--color-accent-1);opacity:0.09;"></div>
+        <div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:var(--color-accent-2);opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:0.8rem;">Under the Hood</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.8rem,3.5vw,2.8rem);margin-bottom:1.6rem;">6-Agent AI Orchestration Pipeline</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.2rem;">
+                <div style="font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.4rem;">Agent 1</div>
+                <div style="font-weight:700;margin-bottom:0.2rem;">Resume Parser</div>
+                <div style="font-size:0.82rem;color:var(--color-text-muted);">Extracts structured skills, evidence, and experience signals</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.2rem;">
+                <div style="font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.4rem;">Agent 2</div>
+                <div style="font-weight:700;margin-bottom:0.2rem;">JD Analyzer</div>
+                <div style="font-size:0.82rem;color:var(--color-text-muted);">Parses role requirements into weighted skill dimensions</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.2rem;">
+                <div style="font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.4rem;">Agent 3</div>
+                <div style="font-weight:700;margin-bottom:0.2rem;">Company Researcher</div>
+                <div style="font-size:0.82rem;color:var(--color-text-muted);">Deep-dives culture, stack, growth stage, and fit signals</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.2rem;">
+                <div style="font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.4rem;">Agent 4</div>
+                <div style="font-weight:700;margin-bottom:0.2rem;">Fit Scorer</div>
+                <div style="font-size:0.82rem;color:var(--color-text-muted);">Weighted geometric mean across 4 dimensions with knockout gate</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.2rem;">
+                <div style="font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.4rem;">Agent 5</div>
+                <div style="font-weight:700;margin-bottom:0.2rem;">Gap Analyst</div>
+                <div style="font-size:0.82rem;color:var(--color-text-muted);">Identifies missing skills and ranks by hiring impact</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.2rem;">
+                <div style="font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.4rem;">Agent 6</div>
+                <div style="font-weight:700;margin-bottom:0.2rem;">Roadmap Generator</div>
+                <div style="font-size:0.82rem;color:var(--color-text-muted);">Produces a time-bound, personalized career action plan</div>
+            </div>
+        </div>
+        <p class="reveal" style="margin-top:1rem;font-size:0.85rem;color:var(--color-text-muted);">Built with a powerful agent harness and specialized skills, running on secure E2B sandboxes.</p>
+    </div>
+</div>
+
+<!-- SLIDE 7: MARKET -->
+<div class="slide" data-slide="7">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-100px;right:-100px;background:var(--color-accent-3);opacity:0.10;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:var(--color-accent-1);opacity:0.09;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:0.8rem;">Market Opportunity</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.8rem,3.5vw,2.8rem);margin-bottom:1.6rem;">A massive, underserved market</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:1.4rem;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;text-align:center;">
+                <div class="glow-pulse" style="font-size:2.2rem;font-weight:900;color:var(--color-accent-1);margin-bottom:0.3rem;" data-count="28" data-suffix="B">$0B</div>
+                <div style="font-size:0.85rem;font-weight:600;">TAM</div>
+                <div style="font-size:0.78rem;color:var(--color-text-muted);">Global career services market</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;text-align:center;">
+                <div class="glow-pulse" style="font-size:2.2rem;font-weight:900;color:var(--color-accent-2);margin-bottom:0.3rem;" data-count="6" data-prefix="$" data-suffix="B">$0B</div>
+                <div style="font-size:0.85rem;font-weight:600;">SAM</div>
+                <div style="font-size:0.78rem;color:var(--color-text-muted);">US AI-assisted job seeker tools</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;text-align:center;">
+                <div class="glow-pulse" style="font-size:2.2rem;font-weight:900;color:var(--color-accent-3);margin-bottom:0.3rem;" data-count="400" data-prefix="$" data-suffix="M">$0M</div>
+                <div style="font-size:0.85rem;font-weight:600;">SOM (Y3)</div>
+                <div style="font-size:0.78rem;color:var(--color-text-muted);">Active job seekers, tech & adjacent</div>
+            </div>
+        </div>
+        <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.4rem;">
+            <p style="font-size:0.9rem;color:var(--color-text-secondary);margin:0;"><strong style="color:var(--color-text);">14M+ Americans</strong> are actively job searching at any moment. Job seekers spend an average of $136 per search on career tools — yet most still receive no structured fit guidance or skill roadmap. Some spend $10,000+ on coaches and still get no better outcomes.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 8: TRACTION -->
+<div class="slide" data-slide="8">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-100px;right:-100px;background:var(--color-accent-1);opacity:0.12;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:var(--color-accent-2);opacity:0.09;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.8rem;">Traction</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.8rem,3.5vw,2.8rem);margin-bottom:1.6rem;">Shipped fast. Built lean.</h2>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.4rem;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.2rem;text-align:center;">
+                <div style="font-size:1.8rem;font-weight:900;color:var(--color-accent-1);" data-count="85">0</div>
+                <div style="font-size:0.8rem;font-weight:600;">K+ lines</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">Production codebase</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.2rem;text-align:center;">
+                <div style="font-size:1.8rem;font-weight:900;color:var(--color-accent-2);" data-count="6">0</div>
+                <div style="font-size:0.8rem;font-weight:600;">months</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">Zero to production</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.2rem;text-align:center;">
+                <div style="font-size:1.8rem;font-weight:900;color:var(--color-accent-3);" data-count="13">0</div>
+                <div style="font-size:0.8rem;font-weight:600;">modules</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">User dashboard</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.2rem;text-align:center;">
+                <div style="font-size:1.8rem;font-weight:900;color:var(--color-accent-1);" data-count="1">0</div>
+                <div style="font-size:0.8rem;font-weight:600;">engineer</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">Sole builder</div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;">
+            <div class="reveal">
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;font-size:0.85rem;"><span>MVP shipped</span><span style="color:var(--color-accent-1);">✓ Dec 2025</span></div>
+                <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+            </div>
+            <div class="reveal">
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;font-size:0.85rem;"><span>Agent pipeline in production</span><span style="color:var(--color-accent-1);">✓ Feb 2026</span></div>
+                <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+            </div>
+            <div class="reveal">
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;font-size:0.85rem;"><span>Beta users onboarding</span><span style="color:var(--color-accent-2);">Active</span></div>
+                <div class="bar-track"><div class="bar-fill" data-width="60"></div></div>
+            </div>
+            <div class="reveal">
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;font-size:0.85rem;"><span>Paid tier launch</span><span style="color:var(--color-text-muted);">Q3 2026</span></div>
+                <div class="bar-track"><div class="bar-fill" data-width="25"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 9: BUSINESS MODEL -->
+<div class="slide" data-slide="9">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:380px;height:380px;top:-80px;right:-80px;background:var(--color-accent-2);opacity:0.10;"></div>
+        <div class="blob" style="width:260px;height:260px;bottom:-50px;left:-30px;background:var(--color-accent-1);opacity:0.08;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:0.8rem;">Business Model</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.8rem,3.5vw,2.8rem);margin-bottom:1.6rem;">Freemium → B2B2C</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;">
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;color:var(--color-accent-1);">📱 B2C · Now</div>
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.5rem;font-size:0.9rem;color:var(--color-text-secondary);">
+                    <li>✦ Free tier: 3 fit scores/mo</li>
+                    <li>✦ Pro: $20/mo — unlimited scores, full roadmap, job matching</li>
+                    <li>✦ Target: active job seekers, career changers, new grads</li>
+                </ul>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.4rem;">
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;color:var(--color-accent-2);">🏢 B2B2C · Year 2</div>
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.5rem;font-size:0.9rem;color:var(--color-text-secondary);">
+                    <li>✦ Sell to bootcamps, universities, staffing firms</li>
+                    <li>✦ $500–$5K/mo per institutional partner</li>
+                    <li>✦ Placement outcomes = their marketing ROI</li>
+                </ul>
+            </div>
+        </div>
+        <div class="reveal" style="margin-top:1rem;background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1rem 1.4rem;display:flex;gap:2rem;justify-content:center;text-align:center;">
+            <div><div style="font-size:1.4rem;font-weight:900;color:var(--color-accent-1);">$20</div><div style="font-size:0.8rem;color:var(--color-text-muted);">ARPU/mo</div></div>
+            <div style="width:1px;background:var(--color-glass-border);"></div>
+            <div><div style="font-size:1.4rem;font-weight:900;color:var(--color-accent-1);">&lt;$8</div><div style="font-size:0.8rem;color:var(--color-text-muted);">COGS/user</div></div>
+            <div style="width:1px;background:var(--color-glass-border);"></div>
+            <div><div style="font-size:1.4rem;font-weight:900;color:var(--color-accent-1);">&gt;65%</div><div style="font-size:0.8rem;color:var(--color-text-muted);">Gross margin</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 10: COMPETITIVE ADVANTAGE -->
+<div class="slide" data-slide="10">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-90px;right:-90px;background:var(--color-accent-1);opacity:0.10;"></div>
+        <div class="blob" style="width:270px;height:270px;bottom:-60px;left:-40px;background:var(--color-accent-3);opacity:0.08;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:0.8rem;">Why ResAlign Wins</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.8rem,3.5vw,2.8rem);margin-bottom:1.4rem;">Not a resume tool. A decision engine.</h2>
+        <div style="overflow-x:auto;">
+            <table class="reveal" style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+                <thead>
+                    <tr style="border-bottom:1px solid var(--color-glass-border);">
+                        <th style="text-align:left;padding:0.7rem 0.8rem;color:var(--color-text-muted);font-weight:600;">Capability</th>
+                        <th style="padding:0.7rem 0.8rem;color:var(--color-text-muted);font-weight:600;text-align:center;">ResAlign</th>
+                        <th style="padding:0.7rem 0.8rem;color:var(--color-text-muted);font-weight:600;text-align:center;">LinkedIn</th>
+                        <th style="padding:0.7rem 0.8rem;color:var(--color-text-muted);font-weight:600;text-align:center;">Resumeio</th>
+                        <th style="padding:0.7rem 0.8rem;color:var(--color-text-muted);font-weight:600;text-align:center;">ChatGPT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <td style="padding:0.7rem 0.8rem;">Calibrated fit score (0–100)</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#4ade80;">✓</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#facc15;">~</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <td style="padding:0.7rem 0.8rem;">Skill gap + evidence extraction</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#4ade80;">✓</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                        <td style="padding:0.7rem 0.8rem;">Company research + culture fit</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#4ade80;">✓</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#facc15;">~</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.7rem 0.8rem;">Personalized career roadmap</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#4ade80;">✓</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#f87171;">✗</td>
+                        <td style="padding:0.7rem 0.8rem;text-align:center;color:#facc15;">~</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 11: FOUNDER -->
+<div class="slide" data-slide="11">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-80px;right:-80px;background:var(--color-accent-1);opacity:0.11;"></div>
+        <div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:var(--color-accent-2);opacity:0.08;"></div>
+    </div>
+    <div class="content">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:0.8rem;">The Founder</p>
+        <h2 class="font-display reveal" style="font-size:clamp(1.8rem,3.5vw,2.8rem);margin-bottom:1.6rem;">Built for this problem. Obsessed with it.</h2>
+        <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:1.4rem;align-items:start;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:14px;padding:1.6rem;text-align:center;">
+                <div style="font-size:3.5rem;margin-bottom:0.8rem;">👨‍💻</div>
+                <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.2rem;">Nikhil Kadapala</div>
+                <div style="font-size:0.85rem;color:var(--color-accent-1);margin-bottom:0.8rem;">Founder & CEO</div>
+                
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.8rem;">
+                <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-left:3px solid var(--color-accent-1);border-radius:10px;padding:0.9rem 1.1rem;font-size:0.88rem;color:var(--color-text-secondary);">
+                    🔬 <strong style="color:var(--color-text);">Research:</strong> Fine-tuned LLMs, distilled and generated synthetic datasets. Published research on iterative self-refinement techniques to improve claim normalization quality at CLEF 2025.
+                </div>
+                <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-left:3px solid var(--color-accent-2);border-radius:10px;padding:0.9rem 1.1rem;font-size:0.88rem;color:var(--color-text-secondary);">
+                    🏗️ <strong style="color:var(--color-text);">Engineering:</strong> Built a scalable production system solo in 3 months — FastAPI backend on GCP, Next.js frontend on Vercel, specialized skills and agent harness running in sandboxes with real-time streaming.
+                </div>
+                <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-left:3px solid var(--color-accent-3);border-radius:10px;padding:0.9rem 1.1rem;font-size:0.88rem;color:var(--color-text-secondary);">
+                    🎯 <strong style="color:var(--color-text);">Domain:</strong> Lived the problem — navigated F1-OPT job search in one of the hardest hiring environments in years.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 12: THE ASK -->
+<div class="slide" data-slide="12">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:500px;height:500px;top:-120px;right:-100px;background:var(--color-accent-1);opacity:0.16;"></div>
+        <div class="blob" style="width:340px;height:340px;bottom:-80px;left:-60px;background:var(--color-accent-2);opacity:0.13;"></div>
+        <div class="blob" style="width:220px;height:220px;top:35%;left:15%;background:var(--color-accent-3);opacity:0.09;"></div>
+    </div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;"></canvas>
+    <div class="content text-center">
+        <p class="reveal" style="font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;color:var(--color-accent-1);margin-bottom:0.8rem;">The Ask</p>
+        <h2 class="font-display reveal" style="font-size:clamp(3rem,7vw,5.5rem);background:linear-gradient(135deg,#7c6af5,#e040fb,#40c4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem;line-height:1.1;">$250K</div>
+        <p class="reveal" style="font-size:1.2rem;font-weight:600;color:var(--color-text);margin-bottom:0.4rem;">Pre-seed</p><p class="reveal" style="font-size:1rem;color:var(--color-text-secondary);margin-bottom:2rem;">18-month runway to paid launch + institutional pilots</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:700px;margin:0 auto;">
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1.1rem;">
+                <div style="font-size:1.3rem;margin-bottom:0.3rem;">⚙️</div>
+                <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">Product</div>
+                <div style="font-size:0.8rem;color:var(--color-text-muted);">Paid tier with usage-based quotas + free with fallback models</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1.1rem;">
+                <div style="font-size:1.3rem;margin-bottom:0.3rem;">📣</div>
+                <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">GTM</div>
+                <div style="font-size:0.8rem;color:var(--color-text-muted);">Content, community, bootcamp pilots</div>
+            </div>
+            <div class="reveal" style="background:var(--color-glass-bg);border:1px solid var(--color-glass-border);border-radius:12px;padding:1.1rem;">
+                <div style="font-size:1.3rem;margin-bottom:0.3rem;">☁️</div>
+                <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">Infra</div>
+                <div style="font-size:0.8rem;color:var(--color-text-muted);">Cloud scale, LLM cost optimization</div>
+            </div>
+        </div>
+        <p class="reveal" style="margin-top:1.5rem;font-size:0.9rem;color:var(--color-text-muted);"><a href="mailto:nikhil@resalign.com" style="color:var(--color-accent-1);text-decoration:none;">nikhil@resalign.com</a> · <a href="https://resalign.com" target="_blank" style="color:var(--color-accent-1);text-decoration:underline;">resalign.com</a></p>
+    </div>
+</div>
+
+</div><!-- end deck -->
+
+<div class="nav-controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
+    <div class="slide-dots" id="dots"></div>
+    <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
+    <span class="slide-counter" id="counter">1 / 12</span>
+</div>
+
+<script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+    const dotsContainer = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    for (let i = 1; i <= total; i++) { const dot = document.createElement('div'); dot.className = 'dot' + (i === 1 ? ' active' : ''); dot.onclick = () => goToSlide(i); dotsContainer.appendChild(dot); }
+    counter.textContent = '1 / ' + total;
+
+    function goToSlide(n) {
+        const prev = document.querySelector('.slide.active');
+        const next = document.querySelector(`.slide[data-slide="${n}"]`);
+        if (prev) prev.classList.remove('active');
+        if (next) { next.classList.add('active'); animateSlide(next); }
+        current = n; updateNav();
+    }
+    function changeSlide(dir) { let n = current + dir; if (n < 1) n = total; if (n > total) n = 1; goToSlide(n); }
+    function updateNav() {
+        document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+        counter.textContent = current + ' / ' + total;
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); } });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => { const diff = touchStartX - e.changedTouches[0].clientX; if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1); });
+
+    function animateSlide(slide) {
+        slide.querySelectorAll('.reveal').forEach((el, i) => {
+            el.style.transition = 'none'; el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
+            el.offsetHeight;
+            const delay = i * 0.08;
+            el.style.transition = `opacity 0.35s ease ${delay}s, transform 0.35s ease ${delay}s`;
+            el.style.opacity = '1'; el.style.transform = 'translateY(0px)';
+        });
+        animateSlideEffects(slide);
+    }
+
+    function animateSlideEffects(slide) {
+        slide.querySelectorAll('[data-count]:not(.counted)').forEach(el => {
+            el.classList.add('counted');
+            const target = parseInt(el.dataset.count);
+            const suffix = el.dataset.suffix || '', prefix = el.dataset.prefix || '';
+            let cur = 0; const step = target / 40;
+            const timer = setInterval(() => { cur += step; if (cur >= target) { cur = target; clearInterval(timer); } el.textContent = prefix + Math.round(cur).toLocaleString() + suffix; }, 30);
+        });
+        slide.querySelectorAll('.bar-fill:not(.fill-init)').forEach((bar, i) => {
+            bar.classList.add('fill-init');
+            bar.style.width = '0%'; bar.style.transition = `width 0.6s ease ${i * 0.12}s`; bar.offsetHeight; bar.style.width = bar.dataset.width + '%';
+        });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        const s = document.querySelector('.mouse-spotlight');
+        if (s) s.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(124,106,245,0.06), transparent 40%)`;
+    });
+
+    window.initParticles = function(canvas, options) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        const interactive = options.interactive !== false; const count = options.count || (interactive ? 55 : 18);
+        let mx = -1000, my = -1000;
+        const particles = Array.from({length: count}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, size: Math.random()*2.5+0.8, alpha: Math.random()*0.35+0.1 }));
+        if (interactive) { canvas.addEventListener('mousemove', (e) => { const r = canvas.getBoundingClientRect(); mx = e.clientX-r.left; my = e.clientY-r.top; }); canvas.addEventListener('mouseleave', () => { mx=-1000; my=-1000; }); }
+        (function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach(p => {
+                if (interactive) { const dx=p.x-mx,dy=p.y-my,dist=Math.sqrt(dx*dx+dy*dy); if(dist<120){const f=(120-dist)/120*2;p.vx+=(dx/dist)*f*0.1;p.vy+=(dy/dist)*f*0.1;} }
+                p.vx*=0.98;p.vy*=0.98;p.x+=p.vx;p.y+=p.vy;
+                if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+                ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(124,106,245,${p.alpha})`;ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        })();
+    };
+    document.querySelectorAll('.particle-canvas').forEach(c => window.initParticles(c, {interactive:true,count:55}));
+    document.querySelectorAll('.particle-canvas-ambient').forEach(c => window.initParticles(c, {interactive:false,count:18}));
+
+    try { animateSlide(document.querySelector('.slide.active')); } catch(e) {}
+</script>
+</body>
+</html>
